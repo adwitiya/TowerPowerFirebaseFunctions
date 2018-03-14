@@ -15,12 +15,15 @@ functions.firestore.document(firestore_location).onCreate(
             Promise: Promise
         });
         
+        var document_data = event.data.data()
+
         //This will be set when we call this function from firebase
         var centre = {
-            latitude: 37.7768006,
-            longitude: -122.4187928
+            latitude: document_data.latitude,
+            longitude: document_data.longitude
         }
 
+        //TODO decide if we should take in a radius
         var search_radius = 500
         var num_points_required = 20
         
@@ -37,7 +40,8 @@ functions.firestore.document(firestore_location).onCreate(
         .asPromise()
         .then(response => {
             var places = response.json.results
-            console.log("Using ahhhahahh")
+            console.log("Found ", places.length, " places from API, generating the other",
+            num_points_required - places.length, " points randomly")
             console.log(JSON.stringify(places, null, 2))
             
             var generated_locations = {"locations": []}
