@@ -7,8 +7,8 @@ const functions = require('firebase-functions');
 //  response.send("Hello from Firebase!");
 // });
 
-//An example function that we want to test
-function addTwoNumbers(x, y) {
-    return x + y;
-  }
-module.exports = addTwoNumbers;
+var Matchmaking = function(user_list) {
+    return [];
+}
+
+exports.Matchmaking = Matchmaking;

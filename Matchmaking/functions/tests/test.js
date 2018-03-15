@@ -1,24 +1,22 @@
 const expect = require('chai').expect
-//const addTwoNumbers = require('addTwoNumbers')
+const Matchmaking = require('../index').Matchmaking
 
-//I should really be importing this, but for a test
-function addTwoNumbers(x, y) {
-    return x + y;
-  }
-
-//This creates the test environment
-describe('addTwoNumbers()', () => {
-    //This defines the tests needed to be passed
-    it('should add two numbers', () => {
+describe('Matchmaking()', (user_list) => {
+    it('should return three users that are close together, 3 roles',
+    () => {
         //Arrange
-        var x = 5;
-        var y = 1;
-        var sum1 = x + y;
 
         //Act
-        var sum2 = addTwoNumbers(x, y);
+        var result = Matchmaking(user_list)
 
         //Assert
-        expect(sum2).to.be.equal(sum1);
+
+        //There should be three roles
+        expect(result.length).to.be.equal(3);
+
+        //All roles should be different
+
+
+        //The users should be close together
     });
 });
