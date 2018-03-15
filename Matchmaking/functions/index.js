@@ -8,7 +8,18 @@ const functions = require('firebase-functions');
 // });
 
 var Matchmaking = function(user_list) {
-    return [];
+    var result_list = [];
+
+    if(user_list.length < 3) {
+        console.log("not enough users to build a team at the moment");
+        return result_list
+    }
+    
+    while(result_list.length < 3) {
+        result_list.push(user_list.pop());
+    }
+    console.log("remaining users are", user_list);
+    return result_list;
 }
 
 exports.Matchmaking = Matchmaking;
