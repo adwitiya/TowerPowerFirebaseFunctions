@@ -32,7 +32,7 @@ var CloseTogether = function(result_list) {
             var location1 = result_list[i];
             var location2 = result_list[j];
             if(afar(location1.latitude, location1.longitude,
-                    location2.latitude, location2.longitude) > radius) {
+                    location2.latitude, location2.longitude) > 2 * radius) {
                     return false;
                 }
             }
