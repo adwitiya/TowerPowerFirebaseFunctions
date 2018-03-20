@@ -13,8 +13,8 @@ var MakePositionsList = function(user_list) {
     var list = [];
     for(i = 0; i < user_list.length; ++i) {
         var location = [];
-        location.push(user_list.latitude);
-        location.push(user_list.longitude);
+        location.push(user_list[i].latitude);
+        location.push(user_list[i].longitude);
         list.push(location);
     }
     return list;
@@ -30,7 +30,7 @@ var Matchmaking = function(user_list) {
 
     var positions = MakePositionsList(user_list)
     var kmeans = new clustering.KMEANS();
-    var clusters = kmeans.run(positions, user_list.length / 3);
+    var clusters = kmeans.run(positions, Math.floor(user_list.length / 3));
     console.log("clusters are ", clusters)
 
     var big_cluster = []
@@ -41,8 +41,9 @@ var Matchmaking = function(user_list) {
         }
     }
 
-    if(big_cluster === []) {
+    if(big_cluster.length < 3) {
         console.log("not enough users in any cluster")
+        return result_list;
     }
 
     while(result_list.length < 3) {
@@ -56,3 +57,14 @@ var Matchmaking = function(user_list) {
 }
 
 exports.Matchmaking = Matchmaking;
+
+firestore_matchmaking = '/matchmaking'
+
+//Note, perhaps this should be on on write
+// exports.PlaceLocations = 
+// functions.firestore.document(firestore_matchmaking).onCreate(
+//     (event) => {
+//         users = event.data.data()
+//         Matchmaking(users)
+//     }
+// )

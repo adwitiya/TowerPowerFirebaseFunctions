@@ -17,7 +17,7 @@ function Location(lat, long) {
 
 var DifferentRoles = function(result_list) {
     for(i = 0; i < result_list.length - 1; ++i) {
-        for(j = 0; j < result_list.length - i; ++j) {
+        for(j = i + i; j < result_list.length; ++j) {
             if(result_list[i].Role === result_list[j].Role) {
                 return false;
             }
@@ -28,13 +28,16 @@ var DifferentRoles = function(result_list) {
 
 var CloseTogether = function(result_list) {
     for(i = 0; i < result_list.length - 1; ++i) {
-        for(j = 0; j < result_list.length - i; ++j) {
-            var location1 = result_list[i];
-            var location2 = result_list[j];
-            if(afar(location1.latitude, location1.longitude,
-                    location2.latitude, location2.longitude) > 2 * radius) {
+        for(j = i + 1; j < result_list.length; ++j) {
+            var location1 = result_list[i].StartLocation;
+            var location2 = result_list[j].StartLocation;
+            var distance = afar(location1.latitude, location1.longitude,
+                                location2.latitude, location2.longitude);
+            console.log(distance);
+            if(distance > 2 * radius) {
                     return false;
                 }
+            
             }
         }
     return true;
@@ -44,10 +47,17 @@ describe('Matchmaking()', (user_list) => {
      //Arrange
      user_list = []
      var location1 = new Location(12, -10)
-     var user1 = new User(1, "Defender", location1);
+     var user1 = new User(1, "Defender", location1)
+     var location2 = new Location(-5, 100)
+     var user2 = new User(2, "Attacker", location2)
+     var location3 = new Location(-6, 6)
+     var user3 = new User(3, "Support", location3)
+     var location4 = new Location(-4, 6)
+     var user4 = new User(4, "Support", location4)
      user_list.push(user1);
-     user_list.push(user1);
-     user_list.push(user1);
+     user_list.push(user2);
+     user_list.push(user3);
+     user_list.push(user4);
 
      //Act
      var result = Matchmaking(user_list)
