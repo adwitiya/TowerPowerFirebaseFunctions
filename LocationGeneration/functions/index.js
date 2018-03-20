@@ -5,15 +5,36 @@ const randomLocation = require('random-location')
 //functions in other languages
 firestore_location = '/locations/{documentId}'
 
+
+var googleMapsClient = require('@google/maps').createClient({
+    key: "GET_YOUR_OWN",
+    Promise: Promise
+});
+
+// Method that uses nested promises to make back to back calls to placesNearby
+// NOTE: eslint warns not to use nested promises
+// NOTE: Timeout of 5000 milliseconds between placesNearby calls required by the API
+function allPlacesNearby(query, soFar = []) {
+    console.info(`sending placesNearby query: ${JSON.stringify(query)}`);
+    return new Promise((resolve, reject) => googleMapsClient.placesNearby(query, (err, response) => (err ? reject(err) : resolve(response))))
+    .then(result => {
+      console.info(`received ${result.json.results.length} results`);
+      const allResults = soFar.concat(result.json.results);
+      const { next_page_token: nextPageToken } = result.json;
+      if (nextPageToken) {
+        return new Promise(resolve => setTimeout(resolve, 5000)).then(() => allPlacesNearby({
+          "location": query.location,
+          "pagetoken": nextPageToken
+        }, allResults));
+      }
+      return allResults;
+    });
+  }
+
 //Note, perhaps this should be on on write
 exports.PlaceLocations = 
 functions.firestore.document(firestore_location).onCreate(
     (event) => {
-        
-        var googleMapsClient = require('@google/maps').createClient({
-            key: "GET_YOUR_OWN",
-            Promise: Promise
-        });
         
         var document_data = event.data.data()
 
@@ -25,7 +46,8 @@ functions.firestore.document(firestore_location).onCreate(
 
         //TODO decide if we should take in a radius
         var search_radius = 500
-        var num_points_required = 20
+        // Making three calls to placesNearby to get 60 non-duplicate places
+        var num_points_required = 60
         
         //TODO it could be a good idea to put a timeout in this
         //Not sure what the unit for this timeout is though
@@ -36,33 +58,31 @@ functions.firestore.document(firestore_location).onCreate(
             rankby: 'prominence',
         }
 
-        return googleMapsClient.placesNearby(places_request)
-        .asPromise()
-        .then(response => {
-            var places = response.json.results
-            console.log("Found ", places.length, " places from API, generating the other",
-            num_points_required - places.length, " points randomly")
-            console.log(JSON.stringify(places, null, 2))
-            
+        return allPlacesNearby(places_request)
+        .then(response =>{
+
+            console.log("Found ", response.length, " places from API, generating the other",
+             num_points_required - response.length, " points randomly")
+
             var generated_locations = {"locations": []}
-            for(i = 0; i < places.length; ++i) {
-                var location = places[i].geometry.location
+            for(i=0; i<response.length; i++)
+            {
+                var location = response[i].geometry.location;
                 generated_locations.locations.push(location)
             }
 
             //If not enough points, return some random ones
-            for(i = 0; i < num_points_required - places.length; ++i) {
+            for(i = 0; i < num_points_required - response.length; ++i) {
                 var randomPoint = 
                 randomLocation.randomCirclePoint(centre, search_radius)
                 generated_locations.locations.push(randomPoint)
             }
 
+            console.log("Total Locations Added: "+ generated_locations.locations.length);
             return event.data.ref.set({generated_locations}, {merge: true})
-        }
-        )
+        })
         .catch(err => {
-            console.log(err)
-        }
-        )
+        console.error(`err: ${err}`)
+    })
     }
 )
