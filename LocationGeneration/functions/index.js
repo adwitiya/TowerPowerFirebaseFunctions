@@ -64,21 +64,24 @@ functions.firestore.document(firestore_location).onCreate(
             console.log("Found ", response.length, " places from API, generating the other",
              num_points_required - response.length, " points randomly")
 
-            var generated_locations = {"locations": []}
-            for(i=0; i<response.length; i++)
+            var generated_locations = {}
+            var count = 0;
+            for(i = 0 ; i < response.length; i++)
             {
                 var location = response[i].geometry.location;
-                generated_locations.locations.push(location)
+                generated_locations["location" + count.toString()] = location
+                ++count;
             }
 
             //If not enough points, return some random ones
             for(i = 0; i < num_points_required - response.length; ++i) {
                 var randomPoint = 
                 randomLocation.randomCirclePoint(centre, search_radius)
-                generated_locations.locations.push(randomPoint)
+                generated_locations["location" + count.toString()] = randomPoint
+                ++count;
             }
 
-            console.log("Total Locations Added: "+ generated_locations.locations.length);
+            console.log("Total Locations Added: " + count);
             return event.data.ref.set({generated_locations}, {merge: true})
         })
         .catch(err => {
