@@ -3,7 +3,7 @@ const randomLocation = require('random-location')
 
 //NOTE the arrow operator => creates arrow functions, very similar to lambda
 //functions in other languages
-firestore_location = '/locations/{documentId}'
+firestore_location = '/teams/{documentId}'
 
 
 var googleMapsClient = require('@google/maps').createClient({
@@ -69,7 +69,10 @@ functions.firestore.document(firestore_location).onCreate(
             for(i = 0 ; i < response.length; i++)
             {
                 var location = response[i].geometry.location;
-                generated_locations["location" + count.toString()] = location
+                var push_location = {}
+                push_location["latitude"] = location.lat
+                push_location["longitude"] = location.lng
+                generated_locations["location" + count.toString()] = push_location
                 ++count;
             }
 
