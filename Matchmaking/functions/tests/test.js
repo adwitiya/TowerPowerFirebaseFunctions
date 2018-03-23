@@ -6,8 +6,8 @@ var radius = 0.5; //In kilometres
 //Create a user
 function User(id, role, start_location) {
     this.ID = id;
-    this.Role = role;
-    this.StartLocation = start_location;
+    this.role = role;
+    this.location = start_location;
 }
 
 function Location(lat, long) {
@@ -16,9 +16,11 @@ function Location(lat, long) {
 }
 
 var DifferentRoles = function(result_list) {
+    const random_role_name = "random"
     for(i = 0; i < result_list.length - 1; ++i) {
-        for(j = i + i; j < result_list.length; ++j) {
-            if(result_list[i].Role === result_list[j].Role) {
+        for(j = i + 1; j < result_list.length; ++j) {
+            if(result_list[i].role !== random_role_name &&
+                result_list[i].role === result_list[j].role) {
                 return false;
             }
         }
@@ -29,11 +31,10 @@ var DifferentRoles = function(result_list) {
 var CloseTogether = function(result_list) {
     for(i = 0; i < result_list.length - 1; ++i) {
         for(j = i + 1; j < result_list.length; ++j) {
-            var location1 = result_list[i].StartLocation;
-            var location2 = result_list[j].StartLocation;
+            var location1 = result_list[i].location;
+            var location2 = result_list[j].location;
             var distance = afar(location1.latitude, location1.longitude,
                                 location2.latitude, location2.longitude);
-            console.log(distance);
             if(distance > 2 * radius) {
                     return false;
                 }
@@ -46,13 +47,13 @@ var CloseTogether = function(result_list) {
 describe('Matchmaking()', (user_list) => {
      //Arrange
      user_list = []
-     var location1 = new Location(12, -10)
+     var location1 = new Location(53.3416875, -6.2530796)
      var user1 = new User(1, "Defender", location1)
-     var location2 = new Location(-5, 100)
+     var location2 = new Location(53.341523, -6.253912)
      var user2 = new User(2, "Attacker", location2)
-     var location3 = new Location(-6, 6)
+     var location3 = new Location(-4, 6)
      var user3 = new User(3, "Support", location3)
-     var location4 = new Location(-4, 6)
+     var location4 = new Location(53.3416123, -6.2530123)
      var user4 = new User(4, "Support", location4)
      user_list.push(user1);
      user_list.push(user2);
