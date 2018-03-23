@@ -76,8 +76,8 @@ functions.firestore.document(firestore_location).onCreate(
                 var user_ref = db.collection("users").doc(matched_users[i].userID)
                 batch.delete(user_match_ref)
                 batch.set(user_ref, {"team_id": team_id}, {merge: true})
+                matched_users[i]["response"] = "pending"
                 team["user" + i.toString()] = matched_users[i]
-                team["user_response" + i.toString()] = "pending"
             }
             // Add it in the batch
             batch.set(new_team_ref, team);
