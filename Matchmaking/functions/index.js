@@ -19,8 +19,18 @@ functions.firestore.document(firestore_location).onCreate(
             snapshot.forEach(doc => {
                 user_list.push(doc.data())
             });
+            //var matched_users = Matchmaking(user_list)
+            console.log("users are", user_list)
+            // conosle.log("matched users are", matched_users)
+            // if(matched_users.length === 0) {
+            //     return true
+            // }
+            
+            //Update the database
+            var batch = db.batch()
             var message = {"read": true}
-            return event.data.ref.set({message}, {merge:true})
+            batch.set(event.data.ref, {message}, {merge:true})
+            return batch.commit()
         })
         .catch(err => {
             console.log('Error getting documents', err);
