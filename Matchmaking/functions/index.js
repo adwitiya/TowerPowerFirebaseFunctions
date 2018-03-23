@@ -19,10 +19,54 @@ functions.firestore.document(firestore_location).onCreate(
             snapshot.forEach(doc => {
                 user_list.push(doc.data())
             });
-            //var matched_users = Matchmaking(user_list)
             console.log("users are", user_list)
-            // conosle.log("matched users are", matched_users)
+
+            //TODO remove
+            if(user_list.length < 3) {
+                console.log("not enough users to build a team at the moment");
+                return true
+            }
+        
+            var matched_users = []
+
+            for(i = 0; i < user_list.length - 2; ++i) {
+                var user_matches = [user_list[i]]
+                for(j = i + 1; j < user_list.length; ++j) {
+                    var location1 = user_list[i].location;
+                    var location2 = user_list[j].location;
+                    var distance = afar(location1.latitude, location1.longitude,
+                                        location2.latitude, location2.longitude);
+                    if(distance < 2 * radius) {
+                            user_matches.push(user_list[j])
+                    }
+                }
+                var different_roles = true
+                const random_role_name = "random"
+                for(i = 0; i < user_matches.length - 1; i++) {
+                    for(j = i + 1; j < user_matches.length; j++) {
+                        if(user_matches[i].role !== random_role_name &&
+                            user_matches[i].role === user_matches[j].role) {
+                            different_roles = false;
+                        }
+                    }
+                }
+                //console.log(DifferentRoles(user_matches))
+                if((user_matches.length >= 3) && different_roles) {
+                    matched_users = user_matches
+                    break;
+                }
+            }
+
+            console.log("matched users are", matched_users)
+
             // if(matched_users.length === 0) {
+            //     console.log("No suitable team found")
+            //     return true
+            // }
+        
+            // return new Promisevar matched_users = Matchmaking(user_list)
+            // console.log("matched users are", matched_users)
+            // // if(matched_users.length === 0) {
             //     return true
             // }
             
@@ -116,5 +160,3 @@ var Matchmaking = function(user_list) {
 }
 
 exports.Matchmaking = Matchmaking;
-
-firestore_matchmaking = '/matchmaking'
