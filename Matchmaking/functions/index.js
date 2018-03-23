@@ -59,21 +59,28 @@ functions.firestore.document(firestore_location).onCreate(
 
             console.log("matched users are", matched_users)
 
-            // if(matched_users.length === 0) {
-            //     console.log("No suitable team found")
-            //     return true
-            // }
-        
-            // return new Promisevar matched_users = Matchmaking(user_list)
-            // console.log("matched users are", matched_users)
-            // // if(matched_users.length === 0) {
-            //     return true
-            // }
+            if(matched_users.length === 0) {
+                console.log("No suitable team found")
+                return true
+            }
             
             //Update the database
             var batch = db.batch()
-            var message = {"read": true}
-            batch.set(event.data.ref, {message}, {merge:true})
+            // Create a ref with auto-generated ID
+            var new_team_ref = db.collection('teams').doc();
+            var team_id = new_team_ref.id
+            var team = {}
+            //Delete these three users from this database
+            for(i = 0; i < 3; ++i) {
+                var user_match_ref = db.collection("matchmaking").doc(matched_users[i].userID)
+                var user_ref = db.collection("users").doc(matched_users[i].userID)
+                batch.delete(user_match_ref)
+                batch.set(user_ref, {"team_id": team_id}, {merge: true})
+                team["user" + i.toString()] = matched_users[i]
+                team["user_response" + i.toString()] = "pending"
+            }
+            // Add it in the batch
+            batch.set(new_team_ref, team);
             return batch.commit()
         })
         .catch(err => {

@@ -60,6 +60,27 @@ describe('Matchmaking()', (user_list) => {
      user_list.push(user3);
      user_list.push(user4);
 
+     user_list = [ { userID: 'test',
+     afkTimeOut: 0,
+     email: 'cs7cs3@tcd.ie',
+     name: 'Default User',
+     shouldSearchAgain: false,
+     location: { longitude: -6.2530792, latitude: 53.3416871 },
+     role: 'dodgy' },
+   { afkTimeOut: 0,
+     email: 'cs7cs3@tcd.ie',
+     name: 'Default User',
+     shouldSearchAgain: false,
+     location: { latitude: 53.3416871, longitude: -6.2530792 },
+     role: 'dodgy',
+     userID: 'test' },
+   { email: 'cs7cs3@tcd.ie',
+     name: 'Default User',
+     shouldSearchAgain: false,
+     location: { latitude: 53.3416871, longitude: -6.2530792 },
+     role: 'dodgy',
+     userID: 'test',
+     afkTimeOut: 0 } ]
      //Act
      var result = Matchmaking(user_list)
 
