@@ -1,15 +1,33 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 const clustering = require('density-clustering');
-//See https://www.npmjs.com/package/density-clustering if want to try clustering
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
 const afar = require('afar')
+
+admin.initializeApp(functions.config().firebase);
+const db = admin.firestore()
 var radius = 0.5; //In kilometres
+const firestore_collection = '/matchmaking'
+const firestore_location = firestore_collection + '/{userID}'
+
+exports.matchmaking = 
+functions.firestore.document(firestore_location).onCreate(
+    (event) => {
+        var user_list = []
+        return allUsers = db.collection(firestore_collection).get()
+        .then(snapshot => {
+            //Retrieve all the users
+            snapshot.forEach(doc => {
+                user_list.push(doc.data())
+            });
+            var message = {"read": true}
+            return event.data.ref.set({message}, {merge:true})
+        })
+        .catch(err => {
+            console.log('Error getting documents', err);
+            return true
+        });
+    }
+)
 
 //Create a user
 function User(id, role, start_location) {
@@ -90,12 +108,3 @@ var Matchmaking = function(user_list) {
 exports.Matchmaking = Matchmaking;
 
 firestore_matchmaking = '/matchmaking'
-
-//Note, perhaps this should be on on write
-// exports.PlaceLocations = 
-// functions.firestore.document(firestore_matchmaking).onCreate(
-//     (event) => {
-//         users = event.data.data()
-//         Matchmaking(users)
-//     }
-// )
