@@ -77,9 +77,17 @@ function fetchTowers(locations, centre){
 
     var tower_locations = {};
 
+    /*
+     Removes the last location since it is usually out of the specified
+     radius
+    */ 
+    var remove_farthest_location = findNFarthestLocation(locations, centre);
+    removeElement(locations, remove_farthest_location);
+    console.log("INFO: The farthest location is removed.");
+    console.log("59 Locations Added");
     tower_locations['tower1'] = findNFarthestLocation(locations, centre);
     removeElement(locations, tower_locations['tower1']);
-    tower_locations['tower2'] = findNFarthestLocation(locations, centre);
+    tower_locations['tower2'] = findNFarthestLocation(locations, centre, 45);
     removeElement(locations, tower_locations['tower2']);
     tower_locations['tower3'] = findNFarthestLocation(locations, centre, 12);
     removeElement(locations, tower_locations['tower3']);
@@ -155,7 +163,7 @@ functions.firestore.document(firestore_location).onCreate(
         }
 
         //TODO decide if we should take in a radius
-        var search_radius = 500
+        var search_radius = 400
         // Making three calls to placesNearby to get 60 non-duplicate places
         var num_points_required = 60
         
@@ -197,7 +205,7 @@ functions.firestore.document(firestore_location).onCreate(
             var hints = {};
             var others = {};
 
-            console.log("Total Locations Added: " + list_locations.length);
+            console.log("Total Locations Retrieved: " + list_locations.length);
             console.log(list_locations);
             // 3 Towers
             towers = fetchTowers(list_locations, centre);
