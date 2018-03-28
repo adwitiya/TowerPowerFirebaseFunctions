@@ -68,9 +68,12 @@ functions.firestore.document(firestore_location).onCreate(
             var batch = db.batch()
             // Create a ref with auto-generated ID
             var new_team_ref = db.collection('teams').doc();
+            var new_game_ref = db.collection('teams').doc(new_team_ref.id).collection('games').doc();
             var team_id = new_team_ref.id
-            var team = {}
+            var team = {current_game: new_game_ref.id}
             //Delete these three users from this database
+            var centre_x = 0
+            var centre_y = 0
             for(i = 0; i < 3; ++i) {
                 var user_match_ref = db.collection("matchmaking").doc(matched_users[i].userID)
                 var user_ref = db.collection("users").doc(matched_users[i].userID)
@@ -78,9 +81,16 @@ functions.firestore.document(firestore_location).onCreate(
                 batch.set(user_ref, {"team_id": team_id}, {merge: true})
                 matched_users[i]["response"] = "pending"
                 team["user" + i.toString()] = matched_users[i]
+                centre_x += matched_users[i].location.latitude
+                centre_y += matched_users[i].location.longitude
             }
             // Add it in the batch
             batch.set(new_team_ref, team);
+            //Get the centroid of the triangle
+            centre_x /= 3.0
+            centre_y /= 3.0
+            var game = {latitude: centre_x, longitude: centre_y}
+            batch.set(new_game_ref, game)
             return batch.commit()
         })
         .catch(err => {
