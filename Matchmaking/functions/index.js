@@ -90,6 +90,11 @@ functions.firestore.document(firestore_location).onCreate(
             centre_x /= 3.0
             centre_y /= 3.0
             var game = {latitude: centre_x, longitude: centre_y}
+            var starting_inventory = {hints: 0, materials: 0}
+            game["inventory"] = starting_inventory
+            game["time_bonus"] = 0
+            var current_time = admin.firestore.FieldValue.serverTimestamp()
+            game["start_time"] = current_time
             batch.set(new_game_ref, game)
             return batch.commit()
         })
