@@ -149,7 +149,6 @@ describe('Test fetching three bases', function(){
   };
 
   var return_val = placeLocations.FetchBases(sample_locations, centre);
-  console.log(return_val);
   it('Length should be equal to', function(){
     assert.equal(Object.keys(return_val).length, 3);
   });
@@ -162,9 +161,34 @@ describe('Test fetching thirteen hints', function(){
     'longitude': -6.3435335
   };
 
-  var return_val = placeLocations.FetchBases(sample_locations, centre);
-  console.log(return_val);
+  var return_val = placeLocations.FetchHints(sample_locations, centre);
   it('Length should be equal to', function(){
-    assert.equal(Object.keys(return_val).length, 3);
+    assert.equal(Object.keys(return_val).length, 13);
   });
-});
+}); 
+
+describe('Test fetching twenty one locations', function(){
+
+  var centre = {
+    'latitude' : 53.44566,
+    'longitude': -6.3435335
+  };
+
+  var return_val = placeLocations.FetchMaterials(sample_locations, centre);
+  it('Length should be equal to', function(){
+    assert.equal(Object.keys(return_val).length, 21);
+  });
+}); 
+
+describe('Test fetching remaining  locations', function(){
+
+  var centre = {
+    'latitude' : 53.44566,
+    'longitude': -6.3435335
+  };
+
+  var return_val = placeLocations.OtherLocations(sample_locations, centre);
+  it('Length should be equal to', function(){
+    assert.equal(Object.keys(return_val).length, 10);
+  });
+}); 
