@@ -16,10 +16,10 @@ function Location(lat, long) {
 
 var DifferentRoles = function(result_list) {
     const random_role_name = "random"
-    for(i = 0; i < result_list.length - 1; i++) {
-        for(j = i + 1; j < result_list.length; j++) {
-            if(result_list[i].role !== random_role_name &&
-                result_list[i].role === result_list[j].role) {
+    for(k = 0; k < result_list.length - 1; ++k) {
+        for(l = k + 1; l < result_list.length; ++l) {
+            if(result_list[k].role !== random_role_name &&
+                result_list[k].role === result_list[l].role) {
                 return false;
             }
         }
@@ -40,7 +40,7 @@ var MakePositionsList = function(user_list) {
 
 //Returns a set of users that match
 var MatchUsers = function(user_list) {
-    for(i = 0; i < user_list.length - 2; ++i) {
+    for(i = 0; i < (user_list.length - 2); ++i) {
         var user_matches = [user_list[i]]
         for(j = i + 1; j < user_list.length; ++j) {
             var location1 = user_list[i].location;
@@ -51,7 +51,7 @@ var MatchUsers = function(user_list) {
                     user_matches.push(user_list[j])
             }
         }
-        var different_roles = DifferentRoles(user_matches)
+        different_roles = DifferentRoles(user_matches)
         //console.log(DifferentRoles(user_matches))
         if((user_matches.length >= 3) && different_roles) {
             return user_matches

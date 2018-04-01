@@ -41,10 +41,10 @@ functions.firestore.document(firestore_location).onCreate(
                 }
                 var different_roles = true
                 const random_role_name = "random"
-                for(i = 0; i < user_matches.length - 1; i++) {
-                    for(j = i + 1; j < user_matches.length; j++) {
-                        if(user_matches[i].role !== random_role_name &&
-                            user_matches[i].role === user_matches[j].role) {
+                for(k = 0; k < user_matches.length - 1; k++) {
+                    for(j = k + 1; j < user_matches.length; j++) {
+                        if(user_matches[k].role !== random_role_name &&
+                            user_matches[k].role === user_matches[j].role) {
                             different_roles = false;
                         }
                     }

@@ -47,40 +47,19 @@ var CloseTogether = function(result_list) {
 describe('Matchmaking fail', (user_list) => {
      //Arrange
      user_list = []
-     var location1 = new Location(53.3416875, -6.2530796)
+     var location1 = new Location(53.3416875, -6.6530796)
      var user1 = new User(1, "Defender", location1)
      var location2 = new Location(53.341523, -6.253912)
      var user2 = new User(2, "Attacker", location2)
      var location3 = new Location(-4, 6)
      var user3 = new User(3, "Support", location3)
-     var location4 = new Location(53.3416123, -6.2530123)
+     var location4 = new Location(53.1416123, -6.2530123)
      var user4 = new User(4, "Support", location4)
      user_list.push(user1);
      user_list.push(user2);
      user_list.push(user3);
      user_list.push(user4);
 
-     user_list = [ { userID: 'test',
-     afkTimeOut: 0,
-     email: 'cs7cs3@tcd.ie',
-     name: 'Default User',
-     shouldSearchAgain: false,
-     location: { longitude: -6.2530792, latitude: 53.3416871 },
-     role: 'dodgy' },
-   { afkTimeOut: 0,
-     email: 'cs7cs3@tcd.ie',
-     name: 'Default User',
-     shouldSearchAgain: false,
-     location: { latitude: 53.3416871, longitude: -6.2530792 },
-     role: 'dodgy',
-     userID: 'test' },
-   { email: 'cs7cs3@tcd.ie',
-     name: 'Default User',
-     shouldSearchAgain: false,
-     location: { latitude: 53.3416871, longitude: -6.2530792 },
-     role: 'dodgy',
-     userID: 'test',
-     afkTimeOut: 0 } ]
      //Act
      var result = Matchmaking(user_list)
 
@@ -106,34 +85,14 @@ describe('Matchmaking pass', (user_list) => {
     user_list.push(user2);
     user_list.push(user3);
     user_list.push(user4);
+    user_list.push(user5);
 
-    user_list = [ { userID: 'test',
-    afkTimeOut: 0,
-    email: 'cs7cs3@tcd.ie',
-    name: 'Default User',
-    shouldSearchAgain: false,
-    location: { longitude: -6.2530792, latitude: 53.3416871 },
-    role: 'dodgy' },
-  { afkTimeOut: 0,
-    email: 'cs7cs3@tcd.ie',
-    name: 'Default User',
-    shouldSearchAgain: false,
-    location: { latitude: 53.3416871, longitude: -6.2530792 },
-    role: 'dodgy',
-    userID: 'test' },
-  { email: 'cs7cs3@tcd.ie',
-    name: 'Default User',
-    shouldSearchAgain: false,
-    location: { latitude: 53.3416871, longitude: -6.2530792 },
-    role: 'dodgy',
-    userID: 'test',
-    afkTimeOut: 0 } ]
     //Act
     var result = Matchmaking(user_list)
 
    it('should return three users',
    () => {
-       expect(result.length).to.be.equal(0);
+       expect(result.length).to.be.equal(3);
    });
    it('should return users with different roles',
    () => {
