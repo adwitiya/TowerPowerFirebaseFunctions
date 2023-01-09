@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@google/maps": "^0.4.5",
-    "firebase-admin": "~5.8.1",
-    "firebase-functions": "^0.8.1",
+    "firebase-admin": "~11.4.1",
+    "firebase-functions": "^4.1.1",
     "geolib": "^2.0.24",
     "random-location": "^1.0.12",
     "randomise-array": "^1.0.4",
